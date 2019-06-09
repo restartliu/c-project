@@ -1,7 +1,7 @@
 #include"stack.h"
+#include"change_type.h"
 
 char* deal_with(stack_head*, stack_head*, char*);
-int change_int(char*);
 int count(int, int, int);
 
 int main()
@@ -52,7 +52,7 @@ char* deal_with(stack_head *number, stack_head *signal, char *temp)
 		}
 		if(number_array[0] > 1)
 		{
-			push( number, change_int(number_array) );
+			push( number, strtoi(&number_array[1]) );
 		}
 	
 		if( (*temp=='+' || *temp=='-' || *temp=='*' || '/' ) && ((signal->stack_tail == NULL) || (signal->stack_tail->receive == '(')) )
@@ -84,14 +84,6 @@ char* deal_with(stack_head *number, stack_head *signal, char *temp)
 	}
 
 	return temp;
-}
-
-int change_int(char *number_array)
-{
-	if( *number_array == 2 )
-	{
-		return (int)( *(number_array+1)-48);
-	}
 }
 
 int count(int signal, int left, int right)
