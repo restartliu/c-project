@@ -40,6 +40,10 @@ char* deal_with(stack_head *number, stack_head *signal, char *temp)
 	else if( *temp == ')' && signal->stack_tail->receive == '(' )
 	{
 		pop(signal);
+		if( signal->stack_tail->receive == '*' || signal->stack_tail->receive == '/' )
+		{
+			push( number, count(pop(signal), pop(number), pop(number)) );
+		}
 	}
 	else
 	{
