@@ -26,7 +26,7 @@ int main()
 	return 0;
 }
 
-char* deal_with(stack_head *number, stack_head *signal, char *temp)
+char* deal_with(stack_head *number, stack_head *signal,char *temp)
 {
 	if(*temp == '\0')
 	{

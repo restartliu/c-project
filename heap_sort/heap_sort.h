@@ -3,12 +3,12 @@ typedef struct TREE{
         struct TREE *left;
         struct TREE *right;
 }tree;
-typedef struct HEAD{
-        int deep;
-        int leave;
-        int index;
-        int *number;
-        tree *head;
+typedef struct HEAD{          //the node witch stored the infomation of binary tree
+        int deep;             //depth of binary tree
+        int leave;            //number of nodes in the last layer of binary tree
+        int index;            //index of number
+        int *number;          //numbers to be sorted
+        tree *head;           //head node of binary tree
 }headnode;
 
-int* heap_sort(int*, int);
+int* heap_sort( int*  /*first address of the integer array*/, int  /*number of numbers*/ );

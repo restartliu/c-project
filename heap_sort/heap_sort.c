@@ -11,7 +11,6 @@ int swap(tree*, tree*);
 
 int* heap_sort(int* number, int count)
 {
-
     int deep = 0;
     while(count>>deep)
         deep++;
@@ -21,11 +20,7 @@ int* heap_sort(int* number, int count)
     int leave = head->leave = count-pow(2, head->deep)+1;
     head->index = 0;
     
-    head->number = (int*)malloc(count*sizeof(int));
-    for(int i = 0; i < count; i++)
-    {
-        *(head->number+i) = *(number+i);
-    }
+    head->number = number;
     
     tree *temp = (tree*)malloc(sizeof(tree));
     temp->left = NULL; 

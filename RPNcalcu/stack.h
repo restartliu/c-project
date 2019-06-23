@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<string.h>
 
-typedef struct STACK_BODY
+typedef struct STACK_BODY          //struct of circular linked list
 {
 	int receive;
 	struct STACK_BODY *next;
