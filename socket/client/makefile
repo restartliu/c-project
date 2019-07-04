@@ -2,5 +2,5 @@ client:client.o
 client.o:client.c
 	gcc -c client.c
 
-clear:
+clean:
 	rm -rf client *.o

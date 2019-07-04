@@ -34,12 +34,12 @@ int main(int argc, char *args[])
         while(1)
         {
             char buff[128] = {0};
-            int n = recv(c, buff, 1, 0);
+            int n = recv(c, buff, sizeof(buff), 0);
             if(n <= 0)
             {
                 break;
             }
-            printf("buff = %s\n",buff);
+            printf("%s\n",buff);
             send(c, "ok", 2, 0);
         }
         printf("one client over\n");
