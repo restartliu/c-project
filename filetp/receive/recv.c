@@ -40,26 +40,28 @@ int recv_data(int sockfd)
 	struct sockaddr_in caddr;
 	int len = sizeof(caddr);
 	
-	char buff[1024] = {0};
+	char name[256] = {0};
+	char buff = 0;
 	int c = -1;
 	while(c < 0)
 		c = accept(sockfd, (struct sockaddr*)&caddr, &len);
 	
 	printf("You are ready to receive a file, Input it's name:\n");
-	scanf("%s", buff);
-	FILE *target = fopen(buff, "wb+");
-	memset(buff, 0, 1024);
+	scanf("%s", name);
+	FILE *target = fopen(name, "wb+");
+	//memset(buff, 0, 1024);
 	
 	int time = 0;
 	while(1)
 	{
-		if( recv(c, buff, 1024, 0) <= 0)
+		if( recv(c, &buff, 1, 0) <= 0)
 		{
 			break;
 		}
 
-		fwrite(buff, 1024, 1, target);
-		memset(buff, 0, 1024);
+		fwrite(&buff, 1, 1, target);
+		//memset(buff, 0, 1024);
+		buff = 0;
 	}
 	fclose(target);
 

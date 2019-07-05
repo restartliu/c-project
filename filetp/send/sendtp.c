@@ -36,20 +36,22 @@ int main()
 
 void send_data(int sockfd)
 {
-	char buff[1024] = {0};
+	char name[256] = {0};
+	char buff = 0;
 	printf("Input the path of the file which you want to transport:\n");
-	scanf("%s", buff);
-	FILE *source = fopen(buff, "rb+");
-	memset(buff, 0, 1024);
+	scanf("%s", name);
+	FILE *source = fopen(name, "rb+");
+	//memset(buff, 0, 1024);
 
 	while(1)
 	{
-		if( fread(buff, 1024, 1, source) == 0 )
+		if( fread(&buff, 1, 1, source) == 0 )
 		{
 			break;
 		}
-		send(sockfd, buff, sizeof(buff), 0);
-		memset(buff, 0, 1024);
+		send(sockfd, &buff, 1, 0);
+		//memset(buff, 0, 1024);
+		buff = 0;
 	}
 	fclose(source);
 }
