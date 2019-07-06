@@ -14,56 +14,55 @@ int recv_data(int);
 
 int main()
 {
-	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	assert(sockfd != 1);
+		int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+		assert(sockfd != 1);
 
-	struct sockaddr_in saddr;
-	memset(&saddr, 0, sizeof(saddr));
+		struct sockaddr_in saddr;
+		memset(&saddr, 0, sizeof(saddr));
 
-	saddr.sin_family = AF_INET;
-	saddr.sin_port = htons(PORT);
-	saddr.sin_addr.s_addr = inet_addr(NET_ADDR);
+		saddr.sin_family = AF_INET;
+		saddr.sin_port = htons(PORT);
+		saddr.sin_addr.s_addr = inet_addr(NET_ADDR);
 
-	int ret = bind(sockfd, (struct sockaddr*)&saddr, sizeof(saddr));
-	assert(ret != -1);
-	
-	listen(sockfd, 5);
+		int ret = bind(sockfd, (struct sockaddr*)&saddr, sizeof(saddr));
+		assert(ret != -1);
 
-	int val = recv_data(sockfd);
-	close(val);
+		listen(sockfd, 5);
 
-	return 0;
+		int val = recv_data(sockfd);
+		close(val);
+
+		return 0;
 }
 
 int recv_data(int sockfd)
 {
-	struct sockaddr_in caddr;
-	int len = sizeof(caddr);
-	
-	char name[256] = {0};
-	char buff = 0;
-	int c = -1;
-	while(c < 0)
-		c = accept(sockfd, (struct sockaddr*)&caddr, &len);
-	
-	printf("You are ready to receive a file, Input it's name:\n");
-	scanf("%s", name);
-	FILE *target = fopen(name, "wb+");
-	//memset(buff, 0, 1024);
-	
-	int time = 0;
-	while(1)
-	{
-		if( recv(c, &buff, 1, 0) <= 0)
+		struct sockaddr_in caddr;
+		int len = sizeof(caddr);
+
+		char buff[1024] = {0};
+		int c = -1;
+		while(c < 0)
+				c = accept(sockfd, (struct sockaddr*)&caddr, &len);
+
+		printf("You are ready to receive a file, Input it's name:\n");
+		scanf("%s", buff);
+		FILE *target = fopen(buff, "wb+");
+		memset(buff, 0, 1024);
+
+		int res = 0;
+		while(1)
 		{
-			break;
+				res = recv(c, buff, sizeof(buff), 0);
+				if( res <= 0)
+				{
+						break;
+				}
+
+				fwrite(buff, res, 1, target);
+				memset(buff, 0, 1024);
 		}
+		fclose(target);
 
-		fwrite(&buff, 1, 1, target);
-		//memset(buff, 0, 1024);
-		buff = 0;
-	}
-	fclose(target);
-
-	return c;
+		return c;
 }

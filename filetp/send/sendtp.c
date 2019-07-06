@@ -14,44 +14,50 @@ void send_data(int);
 
 int main()
 {
-	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	assert(sockfd != -1);
+		int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+		assert(sockfd != -1);
 
-	struct sockaddr_in saddr;
-	memset(&saddr, 0, sizeof(saddr));
-	
-	saddr.sin_family = AF_INET;
-	saddr.sin_port = htons(PORT);
-	saddr.sin_addr.s_addr = inet_addr(NET_ADDR);
+		struct sockaddr_in saddr;
+		memset(&saddr, 0, sizeof(saddr));
 
-	int ret = connect(sockfd, (struct sockaddr*)&saddr, sizeof(saddr));
-	assert(ret != -1);
+		saddr.sin_family = AF_INET;
+		saddr.sin_port = htons(PORT);
+		saddr.sin_addr.s_addr = inet_addr(NET_ADDR);
 
-	send_data(sockfd);
+		int ret = connect(sockfd, (struct sockaddr*)&saddr, sizeof(saddr));
+		assert(ret != -1);
 
-	close(sockfd);
+		send_data(sockfd);
 
-	return 0;
+		close(sockfd);
+
+		return 0;
 }
 
 void send_data(int sockfd)
 {
-	char name[256] = {0};
-	char buff = 0;
-	printf("Input the path of the file which you want to transport:\n");
-	scanf("%s", name);
-	FILE *source = fopen(name, "rb+");
-	//memset(buff, 0, 1024);
+		char buff[1024] = {0};
+		
+		printf("Input the path of the file which you want to transport:\n");
+		scanf("%s", buff);
+		FILE *source = fopen(buff, "rb+");
+		memset(buff, 0, 1024);
 
-	while(1)
-	{
-		if( fread(&buff, 1, 1, source) == 0 )
+		fseek(source, 0L, SEEK_END);
+		long file_len = ftell(source);
+		fseek(source, 0L, SEEK_SET);
+		while(1)
 		{
-			break;
+				if( file_len-ftell(source) < 1024 )
+				{
+						file_len = file_len-ftell(source);
+						fread(buff, file_len, 1, source);
+						send(sockfd, buff, file_len, 0);
+						break;
+				}
+				fread(buff, 1024, 1, source);
+				send(sockfd, buff, 1024, 0);
+				memset(buff, 0, 1024);
 		}
-		send(sockfd, &buff, 1, 0);
-		//memset(buff, 0, 1024);
-		buff = 0;
-	}
-	fclose(source);
+		fclose(source);
 }
