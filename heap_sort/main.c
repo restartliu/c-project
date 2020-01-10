@@ -2,20 +2,21 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#define MAX 100000
 
 int main(int argc, char *args[])
 {
     srand((unsigned)time(0));
-    int number[10000] = {0};
+    int number[MAX] = {0};
 
-    for(int j = 0; j < 10000; j++)
+    for(int j = 0; j < MAX; j++)
     {
-        number[j] = rand()%10000;
+        number[j] = rand()%MAX;
     }
 
-    int *source = heap_sort(number, 10000);
+    int *source = heap_sort(number, MAX);
 
-    for(int i = 0; i < 10000; i++)
+    for(int i = 0; i < MAX; i++)
     {
         printf("%d\n", *(source+i));
     }

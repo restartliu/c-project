@@ -10,10 +10,8 @@ int* heap_sort(int* temp, int size)
 
 	memcpy(ret, temp, size*sizeof(int));
 
-	for(int n = (size-1)/2; n >= 0; n--)
-	{
+	for(int n = heap_size/2; n >= 0; n--)
 		sort(ret, n, size);
-	}
 
 	for(int i = 0; i <= size-2; i++, heap_size--)
 	{
