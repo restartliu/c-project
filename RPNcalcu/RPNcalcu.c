@@ -1,103 +1,123 @@
 #include"stack.h"
-#include"change_type.h"
 
-char* deal_with(stack_head*, stack_head*, char*);
-int count(int, int, int);
+#define ifNumber(countString) ((countString >=48 && countString <= 57 || countString == '.') ? 1 : 0)
+#define ifSignal(countString) ((countString=='+' || countString=='-' || countString=='*' || countString=='/')  ? 1 : 0)
+#define ifEnd(countString) ((countString == '\0') ? 1 : 0)
+#define ifBrackets(countString) ((countString == '(' || countString == ')') ? 1 : 0)
+#define signalPriority(countString) ( !(countString=='+' || countString=='-') && (countString=='*' || countString=='/') ? 1 : 0 )
+#define NumberLen 10
+#define Signal 0.1234
+
+double dealCount(STACKINFO* postFixList, STACKINFO* operStack);
+void dealString(STACKINFO* operStack, STACKINFO* postFixList, char* countString);
+char* dealNumber(char* countString, STACKINFO* postFixList);
+char* dealSignal(char* countString, STACKINFO* operStack, STACKINFO* postFixList);
+char* dealBrackets(char* countString, STACKINFO* operStack, STACKINFO* postFixList);
+double count(double left, double right, char stackSignal);
+double strtoi(char*);
+void printTest(STACKINFO* postFixList);
 
 int main()
 {
-	char count_string[128] = {'\0'};
-	stack_head *number, *signal;
-
-	init(&number);
-	init(&signal);
-
-	scanf("%s", count_string);
+	STACKINFO *operStack = stackinit();
+	STACKINFO *postFixList = stackinit();
 	
-	char *temp = count_string;
-	do
-	{
-		temp = deal_with(number, signal, temp);
-		temp++;
-	}while( signal->stack_tail != NULL );
+	char* countString = (char*)malloc(128 * (sizeof(char)));
+	memset(countString, '\0', 128);
+	scanf("%s", countString);
 
-	print(number);
-
+	dealString(operStack, postFixList, countString);
+	postFixList->head = reverse(postFixList->head, NULL);
+	printf("%lf\n", dealCount(postFixList, operStack));
+	while (getchar()!='q');
+	
 	return 0;
 }
 
-char* deal_with(stack_head *number, stack_head *signal,char *temp)
+double dealCount(STACKINFO* postFixList, STACKINFO* operStack)
 {
-	if(*temp == '\0')
+	while (postFixList->head)
 	{
-		push( number, count(pop(signal), pop(number), pop(number)) );
+		push(operStack, pop(postFixList));
+		if (operStack->head && ifSignal((char)(operStack->head->receive - Signal)))
+			push(operStack, count(pop(operStack), pop(operStack), (char)(pop(operStack) - Signal)));
 	}
-	else if( *temp == ')' && signal->stack_tail->receive != '(' )
-	{
-		push( number, count(pop(signal), pop(number), pop(number)) );
-		temp--;
-	}
-	else if( *temp == ')' && signal->stack_tail->receive == '(' )
-	{
-		pop(signal);
-		if( signal->stack_tail->receive == '*' || signal->stack_tail->receive == '/' )
-		{
-			push( number, count(pop(signal), pop(number), pop(number)) );
-		}
-	}
-	else
-	{
-		char number_array[16] = {1,'\0'};
-		while( *(temp) >=48 && *(temp) <= 57 )
-		{
-			number_array[number_array[0]] = *temp;
-			number_array[0]++;
-			temp++;
-		}
-		if(number_array[0] > 1)
-		{
-			push( number, strtoi(&number_array[1]) );
-		}
-	
-		if( (*temp=='+' || *temp=='-' || *temp=='*' || '/' ) && ((signal->stack_tail == NULL) || (signal->stack_tail->receive == '(')) )
-		{
-			push( signal, (int)(*temp) );
-		}
-		else if( *temp=='+' || *temp=='-' )
-		{
-			push( number, count(pop(signal), pop(number), pop(number)) );
-			push( signal, (int)(*temp) );
-		}
-		else if( (*temp=='*' || *temp=='/') && (signal->stack_tail->receive != '*' && signal->stack_tail->receive != '/') )
-		{
-			push( signal, (int)(*temp) );
-		}
-		else if( *temp=='*' || *temp=='/' )
-		{
-			push( number, count(pop(signal), pop(number), pop(number)) );
-			push( signal, (int)(*temp) );
-		}
-		else if(*temp == '(')
-		{
-			push( signal, (int)(*temp) );
-		}
-		else if(*temp == ')')
-		{
-			temp--;
-		}
-	}
-
-	return temp;
+	return pop(operStack);
 }
 
-int count(int signal, int left, int right)
+void dealString(STACKINFO* operStack, STACKINFO* postFixList, char* countString)
 {
-	char _signal = (char)signal;
-	switch(_signal)
+	while (!ifEnd(*countString))
+	{
+		if (ifNumber(*countString))
+			countString = dealNumber(countString, postFixList);
+		if (ifSignal(*countString))
+			countString = dealSignal(countString, operStack, postFixList);
+		if (ifBrackets(*countString))
+			countString = dealBrackets(countString, operStack, postFixList);
+	}
+	while (operStack->head)
+		push(postFixList, pop(operStack));
+}
+
+char* dealNumber(char *countString, STACKINFO *postFixList)
+{
+	char charNumber[NumberLen] = {'\0'};
+	for (int i = 0; ifNumber(*countString); i++)
+		charNumber[i] = *(countString++);
+	if ( !ifEnd(charNumber[0]) )
+		push(postFixList, strtoi(charNumber));
+	return countString;
+}
+
+char* dealSignal(char* countString, STACKINFO* operStack, STACKINFO* postFixList)
+{
+	while ( operStack->head && signalPriority(*countString) <= signalPriority((char)(operStack->head->receive - Signal)) && !ifBrackets((char)(operStack->head->receive - Signal)) )
+		push(postFixList, pop(operStack));
+	push(operStack, *countString + Signal);
+	return ++countString;
+}
+
+char* dealBrackets(char* countString, STACKINFO* operStack, STACKINFO* postFixList)
+{
+	push(operStack, ((*countString++) + Signal));
+	while ( !ifBrackets(*countString) )
+	{
+		if (ifNumber(*countString))
+			countString = dealNumber(countString, postFixList);
+		if (ifSignal(*countString))
+			countString = dealSignal(countString, operStack, postFixList);
+	}
+	while (!ifBrackets((char)(operStack->head->receive - Signal)))
+		push(postFixList, pop(operStack));
+	pop(operStack);
+	return ++countString;
+}
+
+double count(double left, double right, char stackSignal)
+{
+	switch((char)stackSignal)
 	{
 		case '+':return (left+right);
 		case '-':return (left-right);
 		case '*':return (left*right);
 		case '/':return (left/right);
+	}
+}
+
+double strtoi(char* fch_addr)
+{
+	double number = 0;
+	sscanf(fch_addr, "%lf", &number);
+	return number;
+}
+
+void printTest(STACKINFO* postFixList)
+{
+	STACK* temp = postFixList->head;
+	while (temp)
+	{
+		printf("%lf\n", temp->receive);
+		temp = temp->next;
 	}
 }

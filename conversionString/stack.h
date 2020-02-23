@@ -17,3 +17,4 @@ STACKINFO* stackinit();
 void push(STACKINFO*, double);
 double pop(STACKINFO*);
 STACK* reverse(STACK*, STACK*);
+void printTest(STACKINFO* headnode);

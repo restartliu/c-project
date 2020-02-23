@@ -31,3 +31,13 @@ STACK* reverse(STACK* headnode, STACK* newnode)
 	headnode->next = newnode;
 	return reverse(temp, headnode);
 }
+
+void printTest(STACKINFO* headnode)
+{
+	STACK* temp = headnode->head;
+	while (temp)
+	{
+		printf("%c\n", (char)temp->receive);
+		temp = temp->next;
+	}
+}
