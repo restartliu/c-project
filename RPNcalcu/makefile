@@ -1,13 +1,13 @@
-RPNcalcu:RPNcalcu.o stack.o -lm
+objs = RPNcalcu.o stack.o
 
-RPNcalcu.o:RPNcalcu.c stack.h
-	gcc -g -c RPNcalcu.c
+RPNcalcu:$(objs)
+	cc -o RPNcalcu $(objs) -lm
 
-stack.o:stack.c stack.h
-	gcc -c stack.c
-
-clean:
-	rm -rf RPNcalcu *.o *.h.gch *.out
+$(objs):stack.h
 
 test:
-	gcc -g RPNcalcu.c stack.c stack.h -lm
+	gcc -o test -g $(objs) -lm
+
+.PHONY:clean
+clean:
+	rm -rf RPNcalcu test $(objs) *.h.gch *.out
