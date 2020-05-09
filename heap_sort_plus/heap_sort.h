@@ -1,6 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
+#include<stdio.h>
 
-int* heap_sort(int*, int);
+void heap_sort(int *number, int size);
+void sort(int *number, int count, int size);
+int swap(int *left, int *right);

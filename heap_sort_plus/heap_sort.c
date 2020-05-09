@@ -1,48 +1,35 @@
-#include "heap_sort.h"
+#include"heap_sort.h"
 
-void swap(int*, int*);
-void sort(int*, int, int);
-
-int* heap_sort(int* temp, int size)
+void heap_sort(int *number, int size)
 {
-	int heap_size = size-1;
-	int *ret = (int*)malloc(size*sizeof(int));
+    int heap_size = size-1;
 
-	memcpy(ret, temp, size*sizeof(int));
+    for (int i = size/2-1; i >= 0; i--)
+        sort(number, i, size);
 
-	for(int n = heap_size/2; n >= 0; n--)
-		sort(ret, n, size);
-
-	for(int i = 0; i <= size-2; i++, heap_size--)
-	{
-		sort(ret, 0, heap_size);
-		swap(ret, ret+heap_size);
-	}
-
-	return ret;
+    while (heap_size)
+    {
+        swap(&number[0], &number[heap_size]);
+        sort(number, 0, heap_size--);
+    }
 }
 
-void sort(int *ret, int n, int size)
+void sort(int *number, int count, int size)
 {
-	int left = n*2+1;
-	int right = n*2+2;
-	int largest = n;
-
-	if( left <= size && *(ret+largest) <= *(ret+left) )
-			largest = left;
-	if( right <= size && *(ret+largest) <= *(ret+right) )
-			largest = right;
-	
-	if(largest != n)
-	{
-		swap(ret+largest, ret+n);
-		sort(ret, largest, size);
-	}
+    int left = count*2+1;
+    int right = count*2+2;
+    int smaller_index = count;
+    
+    if ( left<size && (smaller_index = number[left]<number[count]?left:count) );
+    if ( right<size && (smaller_index = number[right]<number[smaller_index]?right:smaller_index) );
+    if ( count!=smaller_index?swap(&number[count], &number[smaller_index]):0 )
+        sort(number, smaller_index, size);
 }
 
-void swap(int *left, int *right)
+int swap(int *left, int *right)
 {
-	int temp = *left;
-	*left = *right;
-	*right = temp;
+    int p = *left;
+    *left = *right;
+    *right = p;
+    return 1;
 }
