@@ -67,17 +67,17 @@ void rbtree_insert_fixup(rbtree_root *root, rbtree *node)
 				parent = node->parent;
 				gparent = parent->parent;
 
-				if(parent == gparent->left)
+				if(parent == gparent->left)//左更改
 				{
 						rbtree *uncle = gparent->right;
-						if(uncle && uncle->color == RED)
+						if(uncle && uncle->color == RED)//gparent左节点存在且和右节点颜色皆为红色时将gparent颜色下沉
 						{
 								uncle->color = parent->color = BLACK;
 								gparent->color = RED;
 								node = gparent;
 								continue;
 						}
-						if(parent->right == node)
+						if(parent->right == node)//<型更改
 						{
 								left_rotate(root, parent);
 								rbtree *temp = parent;
@@ -85,11 +85,11 @@ void rbtree_insert_fixup(rbtree_root *root, rbtree *node)
 								node = temp;
 						}
 
-						parent->color = BLACK;
+						parent->color = BLACK;//左直更改
 						gparent->color = RED;
 						right_rotate(root, gparent);
 				}
-				else
+				else//左更改镜像
 				{
 						rbtree *uncle = gparent->left;
 						if(uncle && uncle->color == RED)
