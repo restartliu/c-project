@@ -7,7 +7,7 @@
 
 void main()
 {
-		int a[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+		int a[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
 		int i, ilen=LENGTH(a);
 
 		rbtree_root *root=RBtree_init();
@@ -25,11 +25,9 @@ void main()
 		}
 
 		printf("== 前序遍历: ");
-		RBtree_preorder(root);
-
-		rbtree *temp = search_node(root, 20);
-		RBtree_delete(root, temp);
-		RBtree_preorder(root);
+		RBtree_traversal(root);
+		RBtree_delete(root, 20);
+		RBtree_traversal(root);
 #if CHECK_DELETE
 		rbtree *temp = NULL;
 		for(i=0; i<1; i++)

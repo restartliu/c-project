@@ -17,6 +17,6 @@ typedef struct RBTREE_ROOT
 
 rbtree_root* RBtree_init();
 void    RBtree_insert(rbtree_root *root, int num);
-void 	RBtree_delete(rbtree_root *root, rbtree *node);
-void	RBtree_preorder(rbtree_root *root);
+void 	RBtree_delete(rbtree_root *root, int element);
+void	RBtree_traversal(rbtree_root *root);
 rbtree* search_node(rbtree_root *root, int num);
