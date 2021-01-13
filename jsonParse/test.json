@@ -1,0 +1,22 @@
+{
+  "name": "BeJson",
+  "url": "http://www.bejson.com",
+  "address": {
+    "street": "科技园路.",
+    "city": "江苏苏州",
+    "country": "中国",
+    "test": {
+        "country": "中国1",
+        "test": {
+            "country": "中国2",
+            "test":{
+                "country": "中国3",
+                "test": {
+                    "country": "中国4",
+                    "inner": "nothing"
+                }
+            }
+        }
+    }
+  }
+}
