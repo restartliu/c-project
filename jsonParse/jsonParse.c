@@ -13,7 +13,7 @@ char *read_in(char *file_path)
 
     buffer = (char *)malloc(file_length);
 
-    assert(buffer != 0);
+    assert(buffer != NULL);
     assert(fread(buffer, file_length, 1, json_src) > 0);
 
     fclose(json_src);

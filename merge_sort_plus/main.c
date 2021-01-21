@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#define MAX 1000000000
+#define MAX 100000000
 
 int main(int argc, char *args[])
 {

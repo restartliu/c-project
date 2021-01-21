@@ -29,7 +29,6 @@ int main()
 	dealString(operStack, postFixList, countString);
 	postFixList->head = reverse(postFixList->head, NULL);
 	printf("%lf\n", dealCount(postFixList, operStack));
-	while (getchar()!='q');
 	
 	return 0;
 }
